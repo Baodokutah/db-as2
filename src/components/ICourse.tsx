@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableRow, Paper, IconButton } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import CourseDetail from './CourseDetail'; // Import the CourseDetail component
+import ICourseDetail from './ICourseDetail'; // Import the CourseDetail component
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
@@ -83,7 +83,7 @@ const ICourseTable: React.FC = () => {
                             {openDetails === course.courseid && (
                                 <TableRow>
                                     <TableCell colSpan={5}>
-                                        <CourseDetail courseCode={course.courseid} courseName={course.coursename}  setTriggerFetch={setTriggerFetch}   classData={classes.filter(c => c.courseid === course.courseid)} />
+                                        <ICourseDetail courseCode={course.courseid} courseName={course.coursename}  setTriggerFetch={setTriggerFetch}   classData={classes.filter(c => c.courseid === course.courseid)} />
                                     </TableCell>
                                 </TableRow>
                             )}

@@ -8,6 +8,7 @@ import ScheduleTable from './Register';
 import CourseTable from './Course';
 import GradeStudent from './GradeStudent';
 import ICourseTable from './ICourse';
+import IScheduleComponent from './ISchedule';
 
 export function ProtectedRoute() {
   const { user } = useAuth();
@@ -47,9 +48,8 @@ export function ProtectedRoute() {
       <Route path="/" element={<Hero />} />
       <Route path="/register" element={<ScheduleTable />} />
       <Route path="/register/:semesterid" element={user.role === 'instructor' ? <ICourseTable /> : <CourseTable />} /> {/* Move this line here */}
-      <Route path="/peko" element={<GradeStudent data={studentGrade} />} />
-      <Route path="/schedule" element={<ScheduleComponent />} />
-      <Route path="/grades" element={<Grades />} />
+      <Route path="/schedule" element={user.role === 'instructor' ? <IScheduleComponent /> : <ScheduleComponent />} /> {/* Move this line here */}
+      <Route path="/grades" element={user.role === 'instructor' ? <GradeStudent data={studentGrade}/> : <Grades />} /> {/* Move this line here */}
     </Routes>
   );
 }

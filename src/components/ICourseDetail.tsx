@@ -28,7 +28,7 @@ const enroll = async (classData: any) => {
 
     try {
         const response = await axios.post('http://localhost:9696/api/instructor/teach', {
-            iusername: user?.username,
+            insusername: user?.username,
             course: classData.courseid,
             class: classData.classid,
             semester: classData.semid
@@ -41,7 +41,7 @@ const enroll = async (classData: any) => {
             console.log('Enrollment failed');
         }
     } catch (error: any) {
-        console.log(error.response.data.msg);
+        console.log(error);
         const msg = error.response.data.msg;
         alert(msg)
     }
@@ -50,7 +50,7 @@ const enroll = async (classData: any) => {
 const unenroll = async (classData: any) => {
     try {
         const response = await axios.post('http://localhost:9696/api/instructor/unteach', {
-            iusername: user?.username,
+            insusername: user?.username,
             course: classData.courseid,
             class: classData.classid,
             semester: classData.semid

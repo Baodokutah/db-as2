@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -7,6 +7,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { useAuth } from '../context/AuthContext';
+import axios from 'axios';
 
 interface student{
     susername: string,
@@ -80,10 +82,55 @@ const EditableTable: React.FC<EditableCellProps> = ({val}) => {
 }
 
 const GradeStudent: React.FC<studentDataPros> = ({data}) => {
+  const [selectedTerm, setSelectedTerm] = useState('');
+  const { user } = useAuth();
 
+  const fetchSche = async () => {
+      try {
+          const response = await axios.post('http://localhost:9696/api/instructor/schedule', {
+              semester:  selectedTerm,
+              insusername: user?.username
+          });
+          console.log(response)
+      } catch (error) {
+          // handle error
+          console.log(error);
+      }
+  };
+
+  useEffect(() => {
+      fetchSche();
+  }, [selectedTerm]);
+
+
+  const termMapping: Record<string, string> = {
+      '211': 'Học kỳ 1 Năm học 2021 - 2022',
+      '212': 'Học kỳ 2 Năm học 2021 - 2022',
+      '221': 'Học kỳ 1 Năm học 2022 - 2023',
+      '222': 'Học kỳ 2 Năm học 2022 - 2023',
+      // add more mappings as needed
+  };
+
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+      console.log("handleSelectChange called with value: ", event.target.value);
+      setSelectedTerm(event.target.value);
+  };
   return (
-    <div className='text-center'>
-      <h1 className='text-[#cc3c1f] text-3xl mt-10'>BẢNG ĐIỂM SINH VIÊN</h1>
+    <div className="flex flex-col items-center justify-start h-screen mt-24">
+    <h1 className='text-[#cc3c1f] text-3xl mt-10'>BẢNG ĐIỂM SINH VIÊN</h1>
+    <select 
+                className="block w-full h-10 mt-10 px-3 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded shadow-sm transition-colors duration-150 ease-in-out" 
+                name="select-lichhoc" 
+                id="select-lichhoc" 
+                value={selectedTerm} 
+                onChange={handleSelectChange}
+            >
+                <option value="all">Vui lòng chọn học kỳ</option>
+                <option value="211">Học kỳ 1 Năm học 2021 - 2022</option>
+                <option value="212">Học kỳ 2 Năm học 2021 - 2022</option>
+                <option value="221">Học kỳ 1 Năm học 2022 - 2023</option>
+                <option value="222">Học kỳ 2 Năm học 2022 - 2023</option>
+            </select>
     {data.map((gradeDat, index) => (
       <div key={index} className='my-4'>
         <div className="text-left font-bold text-[#cc3c1f]">{`Lớp ${gradeDat.class} kỳ ${gradeDat.semester} môn ${gradeDat.course}`}</div>
