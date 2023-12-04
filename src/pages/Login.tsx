@@ -1,6 +1,65 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState(''); // Add this line
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    setError(''); // Reset the error message before each login attempt
+    if (!username || !password) {
+      setError('Vui lòng nhập tên đăng nhập và mật khẩu');
+      return;
+    }
+
+    try {
+      const studentResponse = await axios.post('http://localhost:9696/api/student/login', { username, password });
+      if (studentResponse.status === 200) {
+        const response = studentResponse.data.info.login;
+        const parts = response.replace('(', '').replace(')', '').split(',');
+        const id = parts[0];
+        const username = parts[1];
+        const name = parts[2].replace(/"/g, ''); 
+        login('student', username, id, name);
+        navigate('/');
+        return;
+      }
+    } catch (error) {
+      console.log(error)
+      try {
+        const instructorResponse = await axios.post('http://localhost:9696/api/instructor/login', { username, password });
+        if (instructorResponse.status === 200) {
+          const response = instructorResponse.data.info.login;
+          const parts = response.replace('(', '').replace(')', '').split(',');
+          const id = parts[0];
+          const username = parts[1];
+          const name = parts[2].replace(/"/g, ''); 
+          login('instructor', username, id, name);
+          navigate('/');
+          return;
+        }
+      } catch (error) {
+        
+        setError('Wrong username or password');
+      }
+    }
+  };
+
+  const handleReset = () => {
+    setUsername('');
+    setPassword('');
+  };
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    handleLogin();
+  };
+
   return (
     <div className="container mx-auto bg-gray-200 shadow-md rounded-b-lg">
       <div className="bg-white">
@@ -12,16 +71,17 @@ const Login: React.FC = () => {
         </div>
         <div id="content" className="p-4 overflow-hidden">
           <div className="box panel bg-gray-100 p-6 rounded-md" id="login">
-            <form id="fm1" className="clearfix" action="/cas/login" method="post">
+            <form id="fm1" className="clearfix" onSubmit={handleSubmit}>
               <h2 className="text-2xl font-bold text-red-600 mb-4 border-b border-gray-300 pb-2">Nhập thông tin tài khoản của bạn</h2>
               <div className="mb-4">
                 <label htmlFor="username" className="block text-lg text-gray-600 font-bold mb-2">Tên tài khoản</label>
-                <input id="username" name="username" className="required bg-yellow-100 p-2 rounded-md border border-gray-300 w-full" tabIndex={1} type="text" autoComplete="false" />
+                <input id="username" name="username" className="required bg-yellow-100 p-2 rounded-md border border-gray-300 w-full" tabIndex={1} type="text" autoComplete="false" value={username} onChange={e => setUsername(e.target.value)} />
               </div>
               <div className="mb-4">
                 <label htmlFor="password" className="block text-lg text-gray-600 font-bold mb-2">Mật khẩu</label>
-                <input id="password" name="password" className="required bg-yellow-100 p-2 rounded-md border border-gray-300 w-full" tabIndex={2} type="password" autoComplete="off" />
+                <input id="password" name="password" className="required bg-yellow-100 p-2 rounded-md border border-gray-300 w-full" tabIndex={2} type="password" autoComplete="off" value={password} onChange={e => setPassword(e.target.value)} />
               </div>
+              {error && <p className="text-red-500">{error}</p>}
               <div className="flex items-center mb-4">
                 <input id="warn" name="warn" value="true" tabIndex={3} type="checkbox" className="mr-2" />
                 <label htmlFor="warn" className="text-sm text-gray-600">Cảnh báo trước khi tôi đăng nhập vào các trang web khác.</label>
@@ -32,7 +92,7 @@ const Login: React.FC = () => {
                 <input type="hidden" name="_eventId" value="submit" />
                 <div className="flex space-x-2">
                 <button className="btn bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" tabIndex={4}>Đăng nhập</button>
-                <button className="btn bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="reset" tabIndex={5}>Xóa</button>
+                <button className="btn bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="reset" tabIndex={5} onClick={handleReset}>Xóa</button>
                 </div>
               </div>
               <div className="support mb-0">

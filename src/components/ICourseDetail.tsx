@@ -19,7 +19,7 @@ interface CourseDetailProps {
 
 
 
-const CourseDetail: React.FC<CourseDetailProps> = ({ courseCode, courseName, classData, setTriggerFetch }) => {
+const ICourseDetail: React.FC<CourseDetailProps> = ({ courseCode, courseName, classData, setTriggerFetch }) => {
 
 const { user } = useAuth();
 
@@ -27,8 +27,8 @@ const { user } = useAuth();
 const enroll = async (classData: any) => {
 
     try {
-        const response = await axios.post('http://localhost:9696/api/student/enroll', {
-            susername: user?.username,
+        const response = await axios.post('http://localhost:9696/api/instructor/teach', {
+            iusername: user?.username,
             course: classData.courseid,
             class: classData.classid,
             semester: classData.semid
@@ -49,8 +49,8 @@ const enroll = async (classData: any) => {
 
 const unenroll = async (classData: any) => {
     try {
-        const response = await axios.post('http://localhost:9696/api/student/unenroll', {
-            susername: user?.username,
+        const response = await axios.post('http://localhost:9696/api/instructor/unteach', {
+            iusername: user?.username,
             course: classData.courseid,
             class: classData.classid,
             semester: classData.semid
@@ -77,7 +77,7 @@ const unenroll = async (classData: any) => {
                 <TableHead>
                     <TableRow>
                         <TableCell>Nhóm lớp</TableCell>
-                        <TableCell>DK/ Sĩ số</TableCell>
+                        <TableCell>DK/ Sĩ số sinh viên</TableCell>
                         <TableCell>Giảng viên</TableCell>
                         <TableCell>Thứ</TableCell>
                         <TableCell>Thời gian bắt đầu</TableCell>
@@ -110,4 +110,4 @@ const unenroll = async (classData: any) => {
     );
 };
 
-export default CourseDetail;
+export default ICourseDetail;

@@ -1,14 +1,17 @@
-import React, { createContext, useState, ReactNode, useContext } from 'react';
+import React, { createContext, useState, ReactNode, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 type User = {
   role: 'student' | 'instructor' | 'admin';
+  username: string; 
+  id: string;
+  name: string;
   // add other properties as needed
 };
 
 type AuthContextType = {
   user: User | null;
-  login: (role: 'student' | 'instructor' | 'admin') => void;
+  login: (role: 'student' | 'instructor' | 'admin', username: string, id: string, name: string) => void;
   logout: () => void;
 };
 
@@ -19,17 +22,29 @@ type AuthProviderProps = {
 };
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    const savedUser = localStorage.getItem('user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
 
-  const login = (role: 'student' | 'instructor' | 'admin') => {
-    setUser({ role });
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('user');
+    }
+  }, [user]);
+
+  const login = (role: 'student' | 'instructor' | 'admin', username: string, id: string, name: string) => { 
+    const user = { role, username, id, name };
+    setUser(user);
   };
 
   const logout = () => {
-    setUser(null);
     localStorage.removeItem('user');
+    setUser(null);
   };
-
+  
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
       {children}

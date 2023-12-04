@@ -24,7 +24,7 @@ interface Class {
 
 
 
-const CourseTable: React.FC = () => {
+const ICourseTable: React.FC = () => {
     const [openDetails, setOpenDetails] = useState<string | null>(null);
     const [classes, setClasses] = useState<Class[]>([]);
     const [triggerFetch, setTriggerFetch] = useState(false);    
@@ -95,4 +95,4 @@ const CourseTable: React.FC = () => {
     );
 };
 
-export default CourseTable;
+export default ICourseTable;

@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 
 const Navbar: React.FC = () => {
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
+
+  useEffect(() => {
+  }, [user]);
+
 
   return (
     <nav className="bg-blue-600 fixed top-0 left-0 w-full z-50 p-2 min-h-12 flex justify-between items-center">
@@ -23,11 +27,11 @@ const Navbar: React.FC = () => {
           <li>
             <a href="#" className="flex items-center text-white hover:text-gray-200 ml-4">
               <i className="fa fa-user"></i>
-              <span className="ml-1">Kim Gia Bảo (2152417)</span>
+              <span className="ml-1">{user?.name} ({user?.id})</span>
             </a>
           </li>
           <li>
-            <a href="/login" onClick={() => {logout}} className="flex items-center text-white hover:text-gray-200">
+            <a href="/login" onClick={() => logout()} className="flex items-center text-white hover:text-gray-200">
               <i className="fa fa-sign-out"></i>
               <span className="ml-1">Đăng xuất</span>
             </a>
