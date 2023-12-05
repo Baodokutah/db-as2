@@ -31,7 +31,7 @@ const ICourseTable: React.FC = () => {
     const { semesterid } = useParams();
 
     const fetchClasses = async (semesterid: string) => {
-        const response = await axios.get(`http://localhost:9696/api/class/${semesterid}`);
+        const response = await axios.get(`/api/class/${semesterid}`);
         return response.data.class;
     };
 

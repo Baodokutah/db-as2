@@ -9,6 +9,7 @@ import CourseTable from './Course';
 import GradeStudent from './GradeStudent';
 import ICourseTable from './ICourse';
 import IScheduleComponent from './ISchedule';
+import Management from './Management';
 
 export function ProtectedRoute() {
   const { user } = useAuth();
@@ -19,37 +20,16 @@ export function ProtectedRoute() {
   }
 
 
- const studentGrade = [
-    {
-    semester: "222",
-    course: "CO6969",
-    class: "C01",
-      studentDat:[
-        {
-          "susername":"abd",
-          "bt":0,
-          "btl":0,
-          "gk":0,
-          "ck":0
-        },
-        {
-          "susername":"xyz",
-          "bt":0,
-          "btl":0,
-          "gk":0,
-          "ck":0
-        },
-      ],
-    }
-  ];
+
 
   return (
     <Routes>
       <Route path="/" element={<Hero />} />
+      {user?.role === 'admin' && <Route path="/dashboard" element={<Management />} />}
       <Route path="/register" element={<ScheduleTable />} />
       <Route path="/register/:semesterid" element={user.role === 'instructor' ? <ICourseTable /> : <CourseTable />} /> {/* Move this line here */}
       <Route path="/schedule" element={user.role === 'instructor' ? <IScheduleComponent /> : <ScheduleComponent />} /> {/* Move this line here */}
-      <Route path="/grades" element={user.role === 'instructor' ? <GradeStudent data={studentGrade}/> : <Grades />} /> {/* Move this line here */}
+      <Route path="/grades" element={user.role === 'instructor' ? <GradeStudent /> : <Grades />} /> {/* Move this line here */}
     </Routes>
   );
 }

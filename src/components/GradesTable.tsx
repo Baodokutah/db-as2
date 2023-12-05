@@ -20,15 +20,20 @@ interface Course {
 const GradesTable: React.FC = () => {
   const [selectedTerm, setSelectedTerm] = useState('');
   const [gradesData, setGradesData] = useState<Course[]>([]);
+  const [Gpa, setGpa] = useState('');
+  const [scholarship, setscholarship] = useState('');
+
   const { user } = useAuth();
 
   const fetchGrades = async () => {
     try {
-        const response = await axios.post('http://localhost:9696/api/student/scoreboard', {
+        const response = await axios.post('/api/student/scoreboard', {
             semester: selectedTerm,
             susername: user?.username
         });
         console.log(response);
+        setGpa(response.data.gpa);
+        setscholarship(response.data.scholarship);
         setGradesData(response.data.scoreboard);
     } catch (error) {
         console.log(error);
@@ -97,7 +102,19 @@ const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
                     <TableCell align="center">{course.ck_score}</TableCell>
                     <TableCell align="center">{course.avg_score}</TableCell>
                   </TableRow>
+                  
                 ))}
+                 {(gradesData.length !== 0) && <TableRow style={{color:"#cc3c1f"}}>
+                  <TableCell  colSpan={3}>
+                    Điểm trung bình học kỳ:<b>{Gpa}</b><br/>
+                  </TableCell>
+                  <TableCell colSpan={4}>
+                    <span style={{color: "#004a73"}}><b>Thông tin xét học bổng khuyến khích học tập</b></span><br/>
+                    Điều kiện xét HBKK: <b>{scholarship !== '0.0' ?  "Đủ":"Không đủ"}</b><br/>
+                    Kết quả xét HBKK: <b>{scholarship}</b><br/>
+                  </TableCell>
+                </TableRow>
+}
               </TableBody>
             </Table>
           </TableContainer>

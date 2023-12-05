@@ -24,7 +24,7 @@ const ScheduleComponent = () => {
 
     const fetchSche = async () => {
         try {
-            const response = await axios.post('http://localhost:9696/api/student/schedule', {
+            const response = await axios.post('/api/student/schedule', {
                 semester:  selectedTerm,
                 susername: user?.username
             });

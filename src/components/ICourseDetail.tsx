@@ -27,7 +27,7 @@ const { user } = useAuth();
 const enroll = async (classData: any) => {
 
     try {
-        const response = await axios.post('http://localhost:9696/api/instructor/teach', {
+        const response = await axios.post('/api/instructor/teach', {
             insusername: user?.username,
             course: classData.courseid,
             class: classData.classid,
@@ -49,7 +49,7 @@ const enroll = async (classData: any) => {
 
 const unenroll = async (classData: any) => {
     try {
-        const response = await axios.post('http://localhost:9696/api/instructor/unteach', {
+        const response = await axios.post('/api/instructor/unteach', {
             insusername: user?.username,
             course: classData.courseid,
             class: classData.classid,

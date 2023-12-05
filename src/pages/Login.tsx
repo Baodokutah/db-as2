@@ -18,7 +18,7 @@ const Login: React.FC = () => {
     }
 
     try {
-      const studentResponse = await axios.post('http://localhost:9696/api/student/login', { username, password });
+      const studentResponse = await axios.post('/api/student/login', { username, password });
       if (studentResponse.status === 200) {
         const response = studentResponse.data.info.login;
         const parts = response.replace('(', '').replace(')', '').split(',');
@@ -32,7 +32,7 @@ const Login: React.FC = () => {
     } catch (error) {
       console.log(error)
       try {
-        const instructorResponse = await axios.post('http://localhost:9696/api/instructor/login', { username, password });
+        const instructorResponse = await axios.post('/api/instructor/login', { username, password });
         if (instructorResponse.status === 200) {
           const response = instructorResponse.data.info.login;
           const parts = response.replace('(', '').replace(')', '').split(',');
